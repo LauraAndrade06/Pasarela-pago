@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","123952","No se permite que el hijo sea mayor que el contratante","","Mon Jul 14 16:06:05 CDT 2025","broken","Mon Jul 14 16:08:09 CDT 2025","","","",""
+"","69108","No se permite contratante menor de 18 años","","Mon Jul 14 16:04:09 CDT 2025","passed","Mon Jul 14 16:05:18 CDT 2025","","","",""
+"","37317","No se permite agregar más de un cónyuge","","Mon Jul 14 16:08:09 CDT 2025","broken","Mon Jul 14 16:08:47 CDT 2025","","","",""
+"","72317","Completar formulario y realizar pago exitoso","","Mon Jul 14 16:02:28 CDT 2025","passed","Mon Jul 14 16:03:40 CDT 2025","","","",""
+"","47328","No se permite cónyuge menor de 18 años","","Mon Jul 14 16:05:18 CDT 2025","broken","Mon Jul 14 16:06:05 CDT 2025","","","",""
+"","28439","No se permite RUT duplicado","","Mon Jul 14 16:03:40 CDT 2025","passed","Mon Jul 14 16:04:09 CDT 2025","","","",""
