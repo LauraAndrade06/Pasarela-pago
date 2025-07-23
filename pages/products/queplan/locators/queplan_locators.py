@@ -21,6 +21,8 @@ class ContratanteLocators:
     BANCO = (By.ID, "titularBank")
     NUMERO_CUENTA = (By.ID, "titularBankAccountNumber")
     BOTON_AGREGAR_BENEFICIARIO = (By.XPATH, "//button[normalize-space()='agregar asegurado']")
+    # Localizador para el checkbox de términos y condiciones (Angular Material)
+    TERMINOS = (By.CSS_SELECTOR, "mat-checkbox#AcceptTerms")
 
 class BeneficiarioLocators:
     # Beneficiario 1
@@ -43,7 +45,7 @@ class BeneficiarioLocators:
     APELLIDO_MATERNO2 = (By.NAME, "beneficiaryMaternalSurname1")
     RUT2 = (By.NAME, "beneficiaryRut1")
     FECHA_NAC2 = (By.NAME, "beneficiaryBirthdate1")
-    GENERO2 = (By.XPATH, "(//mat-radio-group[@name='beneficiaryGender1'])[2]//mat-radio-button[contains(., 'Femenino')]")
+    GENERO2 = (By.NAME, "beneficiaryGender1")
     RELACION2 = (By.NAME, "beneficiaryKinship1")
     SISTEMA_PENSIONAL2 = (By.NAME, "beneficiaryPensionSystem1")
     REGION2 = (By.NAME, "beneficiaryRegion1")
@@ -51,6 +53,26 @@ class BeneficiarioLocators:
     DIRECCION2 = (By.NAME, "beneficiaryAddress1")
     ESTATURA2 = (By.NAME, "beneficiaryHeight1")
     PESO2 = (By.NAME, "beneficiaryWeight1")
+
+class dpsLocators:
+    DPS_RADIO_1 = (By.NAME, "dps**q1")
+    DPS_RADIO_2 = (By.NAME, "dps**q2")
+    DPS_RADIO_3 = (By.NAME, "dps**q3")
+    DPS_RADIO_4 = (By.NAME, "dps**q4")
+    DPS_RADIO_5 = (By.NAME, "dps**q5")
+    DPS_RADIO_6 = (By.NAME, "dps**q6")
+    DPS_RADIO_7 = (By.NAME, "dps**q7")
+    DPS_RADIO_8 = (By.NAME, "dps**q8")
+    DPS_RADIO_9 = (By.NAME, "dps**q9")
+    DPS_RADIO_10 = (By.NAME, "dps**q10")
+    DPS_RADIO_11 = (By.NAME, "dps**q11")
+    DPS_RADIO_12 = (By.NAME, "dps**q12")
+    DPS_RADIO_13 = (By.NAME, "dps**q13")
+    DPS_RADIO_14 = (By.NAME, "dps**q14")
+    DPS_RADIO_15 = (By.NAME, "dps**q15")
+    DPS_RADIO_16 = (By.NAME, "dps**q16")
+    DPS_RADIO_17 = (By.NAME, "dps**q17")
+    DPS_RADIO_18 = (By.NAME, "dps**q18")
 
 class PagoLocators:
     PASARELA_PAGO = (By.XPATH, "//img[contains(@src,'kushki') or contains(@alt,'Kushki')]")

@@ -540,7 +540,7 @@ DevTools listening on ws://127.0.0.1:55723/devtools/browser/37423d04-d3be-47fc-b
    "y": 37
 }
 [1752528389.968][INFO]: [4e10e813ac485c2c6c797f5824149e68] COMMAND Navigate {
-   "url": "https://feature-test2.queplan.cl/Compra-Online/CL534"
+   "url": "https://queplan.cl/Comparar/Seguros-de-Salud"
 }
 [1752528389.968][INFO]: Waiting for pending navigations...
 [1752528389.968][DEBUG]: DevTools WebSocket Command: Runtime.evaluate (id=27) (session_id=859D79BBC08FAC1B81169EE558037A81) 815B9B9427393D0B0D1EA5412330C516 {
@@ -555,13 +555,13 @@ DevTools listening on ws://127.0.0.1:55723/devtools/browser/37423d04-d3be-47fc-b
 }
 [1752528389.968][INFO]: Done waiting for pending navigations. Status: ok
 [1752528389.968][DEBUG]: DevTools WebSocket Command: Page.navigate (id=28) (session_id=859D79BBC08FAC1B81169EE558037A81) 815B9B9427393D0B0D1EA5412330C516 {
-   "url": "https://feature-test2.queplan.cl/Compra-Online/CL534"
+   "url": "https://queplan.cl/Comparar/Seguros-de-Salud"
 }
 [1752528389.969][DEBUG]: DevTools WebSocket Event: Page.frameStartedNavigating (session_id=859D79BBC08FAC1B81169EE558037A81) 815B9B9427393D0B0D1EA5412330C516 {
    "frameId": "815B9B9427393D0B0D1EA5412330C516",
    "loaderId": "40E4D3FB7B84FEB1613CAE52EF76F116",
    "navigationType": "differentDocument",
-   "url": "https://feature-test2.queplan.cl/Compra-Online/CL534"
+   "url": "https://queplan.cl/Comparar/Seguros-de-Salud"
 }
 [1752528389.970][DEBUG]: DevTools WebSocket Event: Page.frameStartedLoading (session_id=859D79BBC08FAC1B81169EE558037A81) 815B9B9427393D0B0D1EA5412330C516 {
    "frameId": "815B9B9427393D0B0D1EA5412330C516"
@@ -597,7 +597,7 @@ DevTools listening on ws://127.0.0.1:55723/devtools/browser/37423d04-d3be-47fc-b
 }
 [1752528390.297][INFO]: [4e10e813ac485c2c6c797f5824149e68] RESPONSE Navigate
 [1752528390.299][INFO]: [4e10e813ac485c2c6c797f5824149e68] COMMAND Navigate {
-   "url": "https://feature-test2.queplan.cl/Compra-Online/CL534"
+   "url": "https://queplan.cl/Comparar/Seguros-de-Salud"
 }
 [1752528390.299][INFO]: [4e10e813ac485c2c6c797f5824149e68] RESPONSE Navigate ERROR no such window: target window already closed
 from unknown error: web view not found

@@ -4,12 +4,20 @@ Feature: Flujo completo de contratación de seguro en Queplan
   Background:
     Given que el usuario accede al formulario de Queplan
 
-  @smoke @positive
+  @featuretest
   Scenario: Completar formulario y realizar pago exitoso
     When ingresa datos de contratante
     And ingresa datos de beneficiario
+    And ingresa datos de dps
     And realiza el pago con tarjeta de crédito
     Then se debe mostrar la confirmación de pago exitoso
+
+  @comparador
+  Scenario: Validar el comparador antes de llegar a la pasarela de pago
+    When completa el formulario inicial de búsqueda
+    And selecciona un plan y hace clic en contratar
+    And completa el formulario de contratación
+    Then debe mostrarse el comparador con los datos correctos
 
   @negative
   Scenario: No se permite RUT duplicado
@@ -40,4 +48,4 @@ Feature: Flujo completo de contratación de seguro en Queplan
     And ingresa datos de beneficiario con rut "15046896-5"
     And agrega otro cónyuge con rut "6065750-5"
     And hace clic en Siguiente paso
-    Then debe mostrarse el mensaje de error "Hay más de un perfil con la relación Conyugé. Solo puede haber uno."
+    Then debe mostrarse el mensaje de error "No es posible continuar, dado que los asegurados adicionales incorporados no cumplen con los requisitos de contratación."

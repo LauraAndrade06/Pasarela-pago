@@ -15,9 +15,8 @@ def before_all(context):
     load_dotenv()
     context.product = os.getenv('PRODUCT', 'queplan')
     context.environment = os.getenv('ENVIRONMENT', 'qa')
-    context.base_url = get_product_url(context.product, context.environment)
-    if not context.base_url:
-        raise Exception(f"No se encontró URL para producto {context.product} en entorno {context.environment}")
+    # La URL base se establecerá en before_scenario para tener acceso a los tags
+    # Se mantiene esta función para configuración global
 
 def before_scenario(context, scenario):
     chrome_options = Options()
@@ -30,15 +29,38 @@ def before_scenario(context, scenario):
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     
+    # Opciones adicionales para evitar cierres inesperados
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    
     # Deshabilitar mensajes de consola de Chrome
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
     chrome_options.add_experimental_option('useAutomationExtension', False)
+    chrome_options.add_experimental_option("detach", True)  # Evita que Chrome se cierre al finalizar el script
     
-    # Configuración del servicio de ChromeDriver
-    service = ChromeService(
-        executable_path='/usr/local/bin/chromedriver',
-        service_args=['--verbose', '--log-path=chromedriver.log']
-    )
+    # Configuración del servicio de ChromeDriver usando webdriver_manager
+    # Configuración para permitir cualquier versión de Chrome
+    chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    
+    # Usar el ChromeDriver local descargado manualmente
+    import os
+    # Buscar primero en la carpeta del proyecto
+    chromedriver_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chromedriver.exe")
+    
+    # Si no existe en la carpeta del proyecto, buscar en la carpeta actual
+    if not os.path.exists(chromedriver_path):
+        chromedriver_path = "chromedriver.exe"
+        if not os.path.exists(chromedriver_path):
+            print("\n\nERROR: No se encontró chromedriver.exe")
+            print("Por favor, descarga ChromeDriver 138.0.7204.157 desde:")
+            print("https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.157/win64/chromedriver-win64.zip")
+            print("Extrae el archivo y coloca chromedriver.exe en la carpeta del proyecto.\n\n")
+            raise FileNotFoundError("ChromeDriver no encontrado. Descárgalo manualmente.")
+    
+    print(f"Usando ChromeDriver local desde: {chromedriver_path}")
+    service = ChromeService(executable_path=chromedriver_path)
     
     try:
         # Inicializar el navegador
@@ -65,8 +87,21 @@ def before_scenario(context, scenario):
     #     context.colsanitas_page = ColsanitasPage(context.driver)
     #     context.page = context.colsanitas_page
     # Agrega más productos aquí
-
-    context.driver.get(context.base_url)
+    
+    # Convertir los tags a una lista de strings para pasarlos a get_product_url
+    tags_list = [tag for tag in scenario.tags]
+    print(f"Tags del escenario: {tags_list}")
+    
+    # Obtener la URL según los tags del escenario
+    context.base_url = get_product_url(context.product, context.environment, tags=tags_list)
+    print(f"URL seleccionada para el escenario: {context.base_url}")
+    
+    # Caso especial para el comparador (mantener compatibilidad)
+    if 'comparador' in scenario.tags:
+        print("Ejecutando escenario del comparador con URL específica: https://queplan.cl/Comparar/Seguros-de-Salud")
+        context.driver.get("https://queplan.cl/Comparar/Seguros-de-Salud")
+    else:
+        context.driver.get(context.base_url)
 
 def after_scenario(context, scenario):
     if hasattr(context, "driver"):

@@ -17,6 +17,17 @@ def step_impl(context):
     except Exception as e:
         context.error_mensaje = str(e)
 
+@when("ingresa datos de dps")
+def step_impl(context):
+    print("\n\nSTEP: Ingresando datos de DPS")
+    try:
+        print("Intentando llamar a context.page.dps_inputs()")
+        context.page.dps_inputs()
+        print("Llamada a context.page.dps_inputs() completada")
+    except Exception as e:
+        print(f"ERROR en step dps_inputs: {e}")
+        context.error_mensaje = str(e)
+
 @when("realiza el pago con tarjeta de crédito")
 def step_impl(context):
     try:

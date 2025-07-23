@@ -1,4 +1,12 @@
 class QueplanTestData:
+
+    DATOS_COMPARADOR = {
+        'nombre': 'Test QA',
+        'rutsolicitud': '111111111',
+        'email': 'test@queplan.cl',
+        'telefono': '987654321'
+    }
+
     DATOS_CONTRATANTE = {
         'nombre': 'Laura',
         'apellido_paterno': 'Castro',
@@ -28,7 +36,7 @@ class QueplanTestData:
         'rut': '5607906-8',
         'fecha_nacimiento': '01-01-1998',
         'genero_beneficiario1': 'Masculino',
-        'relacion_contratante': 'Cónyuge',
+        'relacion_contratante': 'Cónyuge / Conviviente Civil',
         'sistema_pensional': 'Fonasa',
         'region': 'RM Metropolitana',
         'comuna': 'Buin',
@@ -44,7 +52,7 @@ class QueplanTestData:
         'rut': '7458290-7',
         'fecha_nacimiento': '01-01-1998',
         'genero_beneficiario2': 'Femenino',
-        'relacion_contratante': 'Cónyuge',
+        'relacion_contratante': 'Cónyuge / Conviviente Civil',
         'sistema_pensional': 'Fonasa',
         'region': 'RM Metropolitana',
         'comuna': 'Buin',

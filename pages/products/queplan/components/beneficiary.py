@@ -11,10 +11,11 @@ class BeneficiarioComponent(BaseComponent):
         self.type(*BeneficiarioLocators.APELLIDO_MATERNO, datos['apellido_materno'])
         self.type(*BeneficiarioLocators.RUT, datos['rut'])
         self.type(*BeneficiarioLocators.FECHA_NAC, datos['fecha_nacimiento'])
-        if datos['genero_beneficiario1'].lower() in ['masculino', 'hombre', 'm']:
-            self.click(*BeneficiarioLocators.GENERO)
-        else:
-            self.click(*BeneficiarioLocators.GENERO)
+        
+        # Usar la clave correcta para el género del beneficiario 1
+        genero = datos.get('genero_beneficiario1', datos.get('genero', 'Masculino'))
+        self.select_mat_option(*BeneficiarioLocators.GENERO, genero)
+        
         self.select_mat_option(*BeneficiarioLocators.RELACION, datos['relacion_contratante'])
         self.select_mat_option(*BeneficiarioLocators.SISTEMA_PENSIONAL, datos['sistema_pensional'])
         self.select_mat_option(*BeneficiarioLocators.REGION, datos['region'])
@@ -30,16 +31,11 @@ class BeneficiarioComponent(BaseComponent):
         self.type(*BeneficiarioLocators.APELLIDO_MATERNO2, datos['apellido_materno'])
         self.type(*BeneficiarioLocators.RUT2, datos['rut'])
         self.type(*BeneficiarioLocators.FECHA_NAC2, datos['fecha_nacimiento'])
-        time.sleep(1)
-        # Para seleccionar el género del segundo beneficiario
-        if datos['genero_beneficiario2'].lower() in ['femenino', 'mujer', 'f']:
-            # Hacer clic en Femenino
-            self.driver.find_element(By.XPATH,
-                                     "/html/body/app-root/queplan-online-sale-manager/proxy-payment-stepper/div/div/payment-stepper/stepper/div/mat-horizontal-stepper/div/div[2]/div[1]/div/div[1]/integration-form/form/formly-form/formly-field/formly-group/formly-field[2]/qp-array-type/div[2]/div[2]/formly-field/formly-group/formly-field[8]/formly-wrapper-mat-form-field/mat-form-field/div[1]/div/div[2]/formly-field-mat-radio/mat-radio-group/mat-radio-button[1]/div/div/input").click()
-        else:
-            # Hacer clic en Masculino
-            self.driver.find_element(By.XPATH,
-                                     "/html/body/app-root/queplan-online-sale-manager/proxy-payment-stepper/div/div/payment-stepper/stepper/div/mat-horizontal-stepper/div/div[2]/div[1]/div/div[1]/integration-form/form/formly-form/formly-field/formly-group/formly-field[2]/qp-array-type/div[2]/div[2]/formly-field/formly-group/formly-field[8]/formly-wrapper-mat-form-field/mat-form-field/div[1]/div/div[2]/formly-field-mat-radio/mat-radio-group/mat-radio-button[2]/div/div/input").click()
+        
+        # Usar la clave correcta para el género del beneficiario 2
+        genero = datos.get('genero_beneficiario2', datos.get('genero', 'Femenino'))
+        self.select_mat_option(*BeneficiarioLocators.GENERO2, genero)
+        
         self.select_mat_option(*BeneficiarioLocators.RELACION2, datos['relacion_contratante'])
         self.select_mat_option(*BeneficiarioLocators.SISTEMA_PENSIONAL2, datos['sistema_pensional'])
         self.select_mat_option(*BeneficiarioLocators.REGION2, datos['region'])

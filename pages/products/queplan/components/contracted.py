@@ -8,10 +8,7 @@ class ContratanteComponent(BaseComponent):
         self.type(*ContratanteLocators.APELLIDO_MATERNO, datos['apellido_materno'])
         self.type(*ContratanteLocators.RUT, datos['rut'])
         self.type(*ContratanteLocators.FECHA_NAC, datos['fecha_nacimiento'])
-        if datos['genero'].lower() in ['masculino', 'hombre', 'm']:
-            self.click(*ContratanteLocators.GENERO)
-        else:
-            self.click(*ContratanteLocators.GENERO)
+        self.select_mat_option(*ContratanteLocators.GENERO, datos['genero'])
         self.select_mat_option(*ContratanteLocators.SISTEMA_PENSIONAL, datos['sistema_pensional'])
         self.select_mat_option(*ContratanteLocators.REGION, datos['region'])
         self.select_mat_option(*ContratanteLocators.COMUNA, datos['comuna'])
@@ -25,3 +22,5 @@ class ContratanteComponent(BaseComponent):
         self.select_mat_option(*ContratanteLocators.TIPO_CUENTA, datos['tipo_cuenta'])
         self.select_mat_option(*ContratanteLocators.BANCO, datos['banco'])
         self.type(*ContratanteLocators.NUMERO_CUENTA, datos['numero_cuenta'])
+        # Usar el método especializado para checkboxes de Angular Material
+        self.click_mat_checkbox(*ContratanteLocators.TERMINOS)
