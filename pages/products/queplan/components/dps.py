@@ -1,78 +1,101 @@
 from pages.products.queplan.components.base_component import BaseComponent
 from pages.products.queplan.locators.queplan_locators import dpsLocators
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
 class DpsComponent(BaseComponent):
     def dps_inputs(self):
-        """
-        Selecciona todos los botones de radio con valor "No" que están visibles.
-        Implementación directa basada en el código de Playwright.
-        """
         print("DpsComponent: Iniciando dps_inputs")
         try:
-            # Conjunto para evitar duplicados
-            ids_procesados = set()
-            ids_botones_no = []
+            # Lista de nombres de los radio buttons DPS
+            dps_radios = [
+                "dps**q1", "dps**q2", "dps**q3", "dps**q4", "dps**q5", "dps**q6", 
+                "dps**q7", "dps**q8", "dps**q9", "dps**q10", "dps**q11", "dps**q12", 
+                "dps**q13", "dps**q14", "dps**q15", "dps**q16", "dps**q17", "dps**q18"
+            ]
             
-            # Encontrar todos los contenedores formly-field
-            print("DpsComponent: Buscando contenedores formly-field")
-            contenedores = self.driver.find_elements(By.CSS_SELECTOR, 'formly-field')
-            print(f"DpsComponent: Encontrados {len(contenedores)} contenedores")
+            # Tiempo máximo de espera para cada radio button (segundos)
+            timeout = 10
+            wait = WebDriverWait(self.driver, timeout)
             
-            for i, contenedor in enumerate(contenedores):
+            for i, nombre in enumerate(dps_radios):
                 try:
-                    # Verificar si el contenedor está oculto
-                    estilo = self.driver.execute_script("return arguments[0].style.display", contenedor)
-                    if estilo == "none":
-                        continue
-                        
-                    # Buscar botones de radio con valor "No" dentro del contenedor
-                    botones_no = contenedor.find_elements(By.CSS_SELECTOR, 'input[type="radio"][value="No"]')
-                    print(f"DpsComponent: Contenedor {i} tiene {len(botones_no)} botones No")
+                    print(f"DpsComponent: Procesando pregunta {i+1}/{len(dps_radios)}: {nombre}")
                     
-                    for boton in botones_no:
-                        id_boton = boton.get_attribute('id')
-                        
-                        # Filtrar solo IDs que contienen "mat-radio"
-                        if id_boton and "mat-radio" in id_boton and id_boton not in ids_procesados:
-                            # Verificar si el botón es visible
-                            try:
-                                es_visible = boton.is_displayed()
-                                ids_botones_no.append({"id": id_boton, "visible": es_visible})
-                                ids_procesados.add(id_boton)
-                                print(f"DpsComponent: Botón encontrado - ID: {id_boton}, Visible: {es_visible}")
-                            except Exception as e:
-                                print(f"DpsComponent: Error al verificar visibilidad: {e}")
-                except Exception as e:
-                    print(f"DpsComponent: Error procesando contenedor {i}: {e}")
-            
-            print(f"DpsComponent: Total botones 'No' encontrados: {len(ids_botones_no)}")
-            
-            # Hacer clic en los botones encontrados
-            for boton_info in ids_botones_no:
-                id_boton = boton_info["id"]
-                try:
-                    # Buscar el botón por ID
-                    selector = f"#{id_boton}"
-                    boton = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    # Esperar a que el radio button esté presente en el DOM
+                    xpath = f"//input[@type='radio' and @name='{nombre}' and @value='No']"                    
+                    print(f"DpsComponent: Esperando que aparezca el radio button {nombre}")
                     
-                    if boton.is_displayed():
-                        # Hacer scroll hasta el botón
-                        self._scroll_to(boton)
+                    try:
+                        # Buscar TODOS los radio buttons con el mismo nombre y value="No"
+                        radios_no = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
+                        print(f"DpsComponent: Encontrados {len(radios_no)} radio buttons para {nombre}")
                         
-                        # Intentar hacer clic usando JavaScript (más confiable para Angular Material)
-                        self.driver.execute_script("arguments[0].click();", boton)
-                        print(f"DpsComponent: Clickeado botón {id_boton}")
-                        
-                        # Esperar un momento entre clics
-                        import time
+                        # Esperar un poco para asegurar que la UI esté lista
                         time.sleep(0.5)
-                    else:
-                        print(f"DpsComponent: Botón no visible: {id_boton}")
+                        
+                        # Contador para saber cuántos botones se clickearon
+                        botones_clickeados = 0
+                        
+                        # Procesar cada radio button encontrado
+                        for idx, radio_no in enumerate(radios_no):
+                            try:
+                                # Verificar si está visible usando JavaScript (más confiable)
+                                is_visible = self.driver.execute_script(
+                                    "return arguments[0].offsetParent !== null && "
+                                    "arguments[0].offsetWidth > 0 && "
+                                    "arguments[0].offsetHeight > 0 && "
+                                    "window.getComputedStyle(arguments[0]).visibility !== 'hidden';", 
+                                    radio_no
+                                )
+                                
+                                if is_visible:
+                                    print(f"DpsComponent: Radio button {nombre} #{idx+1} encontrado y visible")
+                                    
+                                    # Hacer scroll hasta el elemento
+                                    self._scroll_to(radio_no)
+                                    
+                                    # Intentar hacer clic usando JavaScript (más confiable para Angular Material)
+                                    self.driver.execute_script("arguments[0].click();", radio_no)
+                                    print(f"DpsComponent: Clickeado radio button {nombre} #{idx+1}")
+                                    botones_clickeados += 1
+                                    
+                                    # Esperar un momento después de cada clic
+                                    time.sleep(0.5)
+                                else:
+                                    print(f"DpsComponent: Radio button {nombre} #{idx+1} presente pero no visible")
+                            except Exception as e:
+                                print(f"DpsComponent: Error al procesar radio button {nombre} #{idx+1}: {e}")
+                        
+                        if botones_clickeados > 0:
+                            print(f"DpsComponent: Se clickearon {botones_clickeados} botones para {nombre}")
+                            # Esperar a que la UI se actualice después de los clics
+                            time.sleep(1)
+                        else:
+                            print(f"DpsComponent: No se pudo clickear ningún botón para {nombre}")
+                            # Si no se pudo clickear ningún botón y es el primero, es un error crítico
+                            if i == 0:
+                                raise Exception(f"No se pudo clickear ningún botón para {nombre}")
+                        
+                            
+                    except Exception as e:
+                        print(f"DpsComponent: Timeout esperando radio button {nombre}: {e}")
+                        # Si es el primer radio button y no aparece, es un error crítico
+                        if i == 0:
+                            raise Exception(f"El primer radio button {nombre} no apareció: {e}")
+                        # Si no es el primero, podría ser que ya no hay más preguntas
+                        print(f"DpsComponent: Posiblemente no hay más preguntas después de la {i}")
+                        break
                         
                 except Exception as e:
-                    print(f"DpsComponent: Error al hacer clic en {id_boton}: {e}")
+                    print(f"DpsComponent: Error al procesar radio button {nombre}: {e}")
+                    # Si es un error en el primer radio button, es crítico
+                    if i == 0:
+                        raise
             
-            print("DpsComponent: Proceso de clic completado")
+            print("DpsComponent: Proceso de clic en radio buttons completado")
             
         except Exception as e:
             print(f"DpsComponent: Error general en dps_inputs: {e}")
