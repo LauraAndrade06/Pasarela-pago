@@ -3,6 +3,7 @@ from pages.products.queplan.locators.queplan_locators import dpsLocators
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pages.products.queplan.locators.queplan_locators import ContratanteLocators
 import time
 
 class DpsComponent(BaseComponent):
@@ -11,9 +12,9 @@ class DpsComponent(BaseComponent):
         try:
             # Lista de nombres de los radio buttons DPS
             dps_radios = [
-                "dps**q1", "dps**q2", "dps**q3", "dps**q4", "dps**q5", "dps**q6", 
-                "dps**q7", "dps**q8", "dps**q9", "dps**q10", "dps**q11", "dps**q12", 
-                "dps**q13", "dps**q14", "dps**q15", "dps**q16", "dps**q17", "dps**q18"
+                'dps**q1', 'dps**q2', 'dps**qA2', 'dps**q3', 'dps**qA3', 'dps**q4', 'dps**qA4', 'dps**q5', 
+                'dps**qA5', 'dps**q6', 'dps**qA6', 'dps**q7', 'dps**q8', 'dps**q9', 'dps**q10', 'dps**q11', 
+                'dps**q12', 'dps**q13', 'dps**q14', 'dps**qA14', 'dps**q15', 'dps**q16', 'dps**q17', 'dps**q18'
             ]
             
             # Tiempo máximo de espera para cada radio button (segundos)
@@ -97,7 +98,29 @@ class DpsComponent(BaseComponent):
             
             print("DpsComponent: Proceso de clic en radio buttons completado")
             
+            # Aceptar los términos DPS al final del proceso
+            try:
+                print("DpsComponent: Aceptando términos DPS")
+                # Esperar un momento para que la UI se estabilice
+                time.sleep(1)
+                
+                # Intentar con el método especializado para checkboxes
+                self.click_mat_checkbox(*ContratanteLocators.DPS_TERMINOS)
+                print("DpsComponent: Términos DPS aceptados correctamente")
+            except Exception as e:
+                print(f"DpsComponent: Error al aceptar términos DPS: {e}")
+                # Intentar con JavaScript directo
+                try:
+                    print("DpsComponent: Intentando con JavaScript directo")
+                    self.driver.execute_script(
+                        "var checkbox = document.querySelector('mat-checkbox[formcontrolname=\"dpsAcceptTerms\"] input'); " +
+                        "if (checkbox) { checkbox.click(); return true; } else { return false; }")
+                    # Esperar un momento para que el evento se procese
+                    time.sleep(0.5)
+                    print("DpsComponent: Términos DPS aceptados con JavaScript")
+                except Exception as e2:
+                    print(f"DpsComponent: Error con JavaScript: {e2}")
+            
         except Exception as e:
             print(f"DpsComponent: Error general en dps_inputs: {e}")
             raise
-
