@@ -79,9 +79,10 @@ class dpsLocators:
 class PagoLocators:
     PASARELA_PAGO = (By.XPATH, "//img[contains(@src,'kushki') or contains(@alt,'Kushki')]")
     NUMERO_TARJETA = (By.ID, "cardNumber")
-    NOMBRE_TARJETA = (By.ID, "HOLDER_NAME")
+    NOMBRE_TARJETA = (By.NAME, "HOLDER_NAME")
     FECHA_VENCIMIENTO = (By.ID, "expirationDate")
     CVV = (By.ID, "securityCode")
-    BOTON_PAGAR = (By.XPATH, '//*[@id="cdk-step-content-0-1"]/div/div[1]/integration-form/form/formly-form/formly-field/formly-group/formly-field[4]/kushki/subscription-tdc/custom-payment-box/div/mat-card/mat-card-content/form/div/button')
-    MENSAJE_SUSCRIPCION = (By.XPATH, "//h4[normalize-space()='Suscripción solicitada']")
+    BOTON_PAGAR = (By.XPATH, '//*[@id="cardPaymentBrick_container"]/form/div[3]/div/div/button')
+    MENSAJE_SUSCRIPCION = (By.XPATH, "//h4[@class='alert-title']")
     BOTON_SIGUIENTE = (By.XPATH, "//button[normalize-space()='Siguiente paso']")
+

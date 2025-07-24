@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
 from dotenv import load_dotenv
 from utils.urls import get_product_url
+import sys
 
 # Importa tus page objects aquí
 from pages.products.queplan.page import QueplanPage
@@ -45,20 +46,18 @@ def before_scenario(context, scenario):
     chrome_options.add_argument("--remote-debugging-port=9222")
     
     # Usar el ChromeDriver local descargado manualmente
-    import os
-    # Buscar primero en la carpeta del proyecto
-    chromedriver_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chromedriver.exe")
-    
-    # Si no existe en la carpeta del proyecto, buscar en la carpeta actual
-    if not os.path.exists(chromedriver_path):
-        chromedriver_path = "chromedriver.exe"
+    if sys.platform.startswith("darwin"):
+        chromedriver_path = "/usr/local/bin/chromedriver"
+    elif sys.platform.startswith("win"):
+        chromedriver_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "chromedriver.exe")
         if not os.path.exists(chromedriver_path):
-            print("\n\nERROR: No se encontró chromedriver.exe")
-            print("Por favor, descarga ChromeDriver 138.0.7204.157 desde:")
-            print("https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.157/win64/chromedriver-win64.zip")
-            print("Extrae el archivo y coloca chromedriver.exe en la carpeta del proyecto.\n\n")
-            raise FileNotFoundError("ChromeDriver no encontrado. Descárgalo manualmente.")
-    
+            chromedriver_path = "chromedriver.exe"
+    else:
+        chromedriver_path = "chromedriver"
+
+    if not os.path.exists(chromedriver_path):
+        raise FileNotFoundError(f"ChromeDriver no encontrado en {chromedriver_path}")
+
     print(f"Usando ChromeDriver local desde: {chromedriver_path}")
     service = ChromeService(executable_path=chromedriver_path)
     

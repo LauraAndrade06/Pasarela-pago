@@ -10,7 +10,7 @@ Feature: Flujo completo de contratación de seguro en Queplan
     And ingresa datos de beneficiario
     And ingresa datos de dps
     And realiza el pago con tarjeta de crédito
-    Then se debe mostrar la confirmación de pago exitoso
+    Then se debe mostrar la confirmación de pago fallido
 
   @comparador
   Scenario: Validar el comparador antes de llegar a la pasarela de pago

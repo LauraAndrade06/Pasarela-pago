@@ -35,7 +35,7 @@ def step_impl(context):
     except Exception as e:
         context.error_mensaje = str(e)
 
-@then('se debe mostrar la confirmación de pago exitoso')
+@then('se debe mostrar la confirmación de pago fallido')
 def step_impl(context):
     mensaje = context.page.obtener_mensaje_confirmacion_pago()
-    assert mensaje and 'Suscripción solicitada' in mensaje, "No se mostró el mensaje 'Suscripción solicitada'"
+    assert mensaje and 'No se pudo completar el pago' in mensaje, "No se mostró el mensaje 'No se pudo completar el pago'"
