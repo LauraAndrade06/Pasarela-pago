@@ -1,13 +1,15 @@
 from pages.products.queplan.components.base_component import BaseComponent
 from pages.products.queplan.locators.queplan_locators import PagoLocators
+import time
 
 class PagoComponent(BaseComponent):
     def realizar_pago(self, datos_pago):
-        self.click(*PagoLocators.PASARELA_PAGO)
+        time.sleep(5)
+        #self.click(*PagoLocators.PASARELA_PAGO)
         self.type(*PagoLocators.NUMERO_TARJETA, datos_pago['numero_tarjeta'])
-        self.type(*PagoLocators.NOMBRE_TARJETA, datos_pago['nombre_titular'])
         self.type(*PagoLocators.FECHA_VENCIMIENTO, datos_pago['fecha_vencimiento'])
         self.type(*PagoLocators.CVV, datos_pago['cvv'])
+        self.type(*PagoLocators.NOMBRE_TARJETA, datos_pago['nombre_titular'])
         self.click(*PagoLocators.BOTON_PAGAR)
 
     def obtener_mensaje_confirmacion_pago(self, timeout=50):

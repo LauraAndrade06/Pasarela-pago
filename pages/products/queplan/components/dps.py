@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.products.queplan.locators.queplan_locators import ContratanteLocators
+from pages.products.queplan.locators.queplan_locators import PagoLocators
 import time
 
 class DpsComponent(BaseComponent):
@@ -112,6 +113,10 @@ class DpsComponent(BaseComponent):
             # Esperar un momento para que la UI se estabilice completamente después de los radio buttons
             time.sleep(2)
             
+            # Hacer clic en el botón Siguiente paso después de completar los inputs
+            print("DpsComponent: Llamando a hacer_clic_siguiente_paso() después de completar los inputs")
+            self.hacer_clic_siguiente_paso()
+            
         except Exception as e:
             print(f"DpsComponent: Error general en dps_inputs: {e}")
             raise
@@ -119,23 +124,60 @@ class DpsComponent(BaseComponent):
     def hacer_clic_siguiente_paso(self):
         """
         Hace clic en el botón 'Siguiente paso' después de aceptar los términos y condiciones.
+        Intenta hacer clic en todos los botones 'Siguiente paso' usando múltiples estrategias.
         """
         try:
             print("DpsComponent: Haciendo clic en el botón 'Siguiente paso'")
-            # Utilizamos el localizador del botón siguiente desde PagoLocators
-            from pages.products.queplan.locators.queplan_locators import PagoLocators
+            # Utilizamos el localizador del botón siguiente desde PagoLocators            
+            print("DpsComponent: Buscando todos los botones 'Siguiente paso'...")
+            botones = self.driver.find_elements(By.XPATH, "//button[normalize-space()='Siguiente paso']")
+            print(f"DpsComponent: Se encontraron {len(botones)} botones 'Siguiente paso'")
             
-            # Esperamos un momento para asegurar que la página esté lista
-            import time
+            # Primero intentamos hacer scroll hacia abajo para asegurarnos de que todos los elementos estén visibles
+            print("DpsComponent: Haciendo scroll hacia abajo para asegurar visibilidad")
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
             
-            # Hacemos scroll hasta el botón y hacemos clic
-            self.click(*PagoLocators.BOTON_SIGUIENTE)
-            print("DpsComponent: Se hizo clic exitosamente en 'Siguiente paso'")
+            # Refrescamos la lista de botones después del scroll
+            botones = self.driver.find_elements(By.XPATH, "//button[normalize-space()='Siguiente paso']")
             
-            # Esperamos un momento para que la página responda al clic
-            time.sleep(1)
-            return True
+            for i, boton in enumerate(botones):
+                try:
+                    print(f"DpsComponent: Intentando hacer clic en el botón {i+1}/{len(botones)}")
+                    
+                    # Estrategia 1: Scroll al elemento y esperar que sea clickeable
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", boton)
+                    time.sleep(1)
+                    
+                    # Verificar si el botón está visible y clickeable
+                    if not boton.is_displayed() or not boton.is_enabled():
+                        print(f"DpsComponent: Botón {i+1} no está visible o habilitado, intentando otra estrategia")
+                        continue
+                    
+                    try:
+                        # Estrategia 2: Clic normal
+                        boton.click()
+                        print(f"DpsComponent: Se hizo clic exitosamente en el botón {i+1} con clic normal")
+                        time.sleep(2)
+                        return True
+                    except Exception as e:
+                        print(f"DpsComponent: Error con clic normal en botón {i+1}: {e}")
+                        
+                        try:
+                            # Estrategia 3: Clic con JavaScript
+                            print(f"DpsComponent: Intentando clic con JavaScript en botón {i+1}")
+                            self.driver.execute_script("arguments[0].click();", boton)
+                            print(f"DpsComponent: Se hizo clic exitosamente con JavaScript en botón {i+1}")
+                            time.sleep(2)
+                            return True
+                        except Exception as js_error:
+                            print(f"DpsComponent: Error con clic JavaScript en botón {i+1}: {js_error}")
+                            continue
+                except Exception as e:
+                    print(f"DpsComponent: Error al hacer clic en el botón {i+1}: {e}")
+            
+            print("DpsComponent: No se pudo hacer clic en ningún botón 'Siguiente paso'")
+            return False
         except Exception as e:
-            print(f"DpsComponent: Error al hacer clic en 'Siguiente paso': {e}")
+            print(f"DpsComponent: Error general al hacer clic en 'Siguiente paso': {e}")
             return False
