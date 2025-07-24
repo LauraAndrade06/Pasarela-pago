@@ -23,9 +23,7 @@ class ContratanteLocators:
     BOTON_AGREGAR_BENEFICIARIO = (By.XPATH, "//button[normalize-space()='agregar asegurado']")
     # Localizador para el checkbox de términos y condiciones (Angular Material)
     TERMINOS = (By.CSS_SELECTOR, "mat-checkbox#AcceptTerms")
-    DPS_TERMINOS = (By.CSS_SELECTOR, "input[name='dpsAcceptTerms']")
-    # También podemos usar el ID para mayor precisión
-    DPS_TERMINOS_ID = (By.ID, "dpsAcceptTerms-input")
+    DPS_TERMINOS = (By.CSS_SELECTOR, "mat-checkbox#dpsAcceptTerms")
 
 
 class BeneficiarioLocators:

@@ -10,6 +10,15 @@ class DpsComponent(BaseComponent):
     def dps_inputs(self):
         print("DpsComponent: Iniciando dps_inputs")
         try:
+            # Primero hacemos clic en el checkbox de términos antes de procesar los radio buttons
+            try:
+                print("DpsComponent: Intentando aceptar términos DPS antes de procesar radio buttons")
+                self.click_mat_checkbox(*ContratanteLocators.DPS_TERMINOS)
+                print("DpsComponent: Términos DPS aceptados exitosamente")
+            except Exception as e:
+                print(f"DpsComponent: Error al aceptar términos DPS: {e}")
+                print("DpsComponent: Continuando con los radio buttons")
+            
             # Lista de nombres de los radio buttons DPS
             dps_radios = [
                 'dps**q1', 'dps**q2', 'dps**qA2', 'dps**q3', 'dps**qA3', 'dps**q4', 'dps**qA4', 'dps**q5', 
@@ -99,28 +108,34 @@ class DpsComponent(BaseComponent):
             print("DpsComponent: Proceso de clic en radio buttons completado")
             
             # Aceptar los términos DPS al final del proceso
-            try:
-                print("DpsComponent: Aceptando términos DPS")
-                # Esperar un momento para que la UI se estabilice
-                time.sleep(1)
-                
-                # Intentar con el método especializado para checkboxes
-                self.click_mat_checkbox(*ContratanteLocators.DPS_TERMINOS)
-                print("DpsComponent: Términos DPS aceptados correctamente")
-            except Exception as e:
-                print(f"DpsComponent: Error al aceptar términos DPS: {e}")
-                # Intentar con JavaScript directo
-                try:
-                    print("DpsComponent: Intentando con JavaScript directo")
-                    self.driver.execute_script(
-                        "var checkbox = document.querySelector('mat-checkbox[formcontrolname=\"dpsAcceptTerms\"] input'); " +
-                        "if (checkbox) { checkbox.click(); return true; } else { return false; }")
-                    # Esperar un momento para que el evento se procese
-                    time.sleep(0.5)
-                    print("DpsComponent: Términos DPS aceptados con JavaScript")
-                except Exception as e2:
-                    print(f"DpsComponent: Error con JavaScript: {e2}")
+            print("DpsComponent: Aceptando términos DPS")
+            # Esperar un momento para que la UI se estabilice completamente después de los radio buttons
+            time.sleep(2)
             
         except Exception as e:
             print(f"DpsComponent: Error general en dps_inputs: {e}")
             raise
+            
+    def hacer_clic_siguiente_paso(self):
+        """
+        Hace clic en el botón 'Siguiente paso' después de aceptar los términos y condiciones.
+        """
+        try:
+            print("DpsComponent: Haciendo clic en el botón 'Siguiente paso'")
+            # Utilizamos el localizador del botón siguiente desde PagoLocators
+            from pages.products.queplan.locators.queplan_locators import PagoLocators
+            
+            # Esperamos un momento para asegurar que la página esté lista
+            import time
+            time.sleep(1)
+            
+            # Hacemos scroll hasta el botón y hacemos clic
+            self.click(*PagoLocators.BOTON_SIGUIENTE)
+            print("DpsComponent: Se hizo clic exitosamente en 'Siguiente paso'")
+            
+            # Esperamos un momento para que la página responda al clic
+            time.sleep(1)
+            return True
+        except Exception as e:
+            print(f"DpsComponent: Error al hacer clic en 'Siguiente paso': {e}")
+            return False
